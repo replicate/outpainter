@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#__nuxt {
+  min-height: 100vh;
+  background: rgb(246, 246, 246);
+  font-family: -apple-system, system-ui, BlinkMacSystemFont, Helvetiva Neue,
+    Helvetica, Arial, sans-serif;
+}
