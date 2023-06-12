@@ -6,3 +6,17 @@ main.container.mx-auto.p-8(
   Outpainter
   Footer
 </template>
+
+<script>
+import { mapActions } from 'pinia'
+
+import useAppStore from '@/stores/app'
+
+export default {
+  name: 'App',
+  methods: mapActions(useAppStore, ['init']),
+  mounted() {
+    this.init()
+  }
+}
+</script>

@@ -1,7 +1,8 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  ssr: false,
   devtools: {
-    enabled: true
+    enabled: false
   },
   runtimeConfig: {
     replicateApiToken: process.env.NUXT_REPLICATE_API_TOKEN || ''
@@ -9,6 +10,7 @@ export default defineNuxtConfig({
   nitro: {
     preset: 'vercel-edge'
   },
+  modules: ['@pinia/nuxt'],
   css: ['~/assets/css/main.css'],
   postcss: {
     plugins: {

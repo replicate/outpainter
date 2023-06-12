@@ -1,0 +1,193 @@
+<template lang="pug">
+.select-file
+  input(
+    @change="loadFile"
+    type="file"
+    ref="file"
+    accept="image/*"
+  )
+  button.text-white.bg-blue-700.font-medium.rounded-lg.text-sm.w-full.px-5.py-2.text-center(
+    @click="onSelectFile"
+    class="hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    type="submit"
+  ) Select Image
+  button.ml-4.text-white.bg-blue-700.font-medium.rounded-lg.text-sm.w-full.px-5.py-2.text-center(
+    @click="onReRun"
+    class="hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    type="submit"
+  ) Submit
+</template>
+
+<script>
+import { get } from 'lodash'
+
+const IMG_DIMENSIONS = 256
+const IMG_PADDING = 128
+
+export default {
+  name: 'Outpainter',
+  props: ['image', 'mask', 'crop'],
+  data: () => ({
+    dropzone: null
+  }),
+  computed: {
+    proxy_image: {
+      get() {
+        return this.image
+      },
+      set(value) {
+        this.$emit('update:image', value)
+      }
+    },
+    proxy_mask: {
+      get() {
+        return this.mask
+      },
+      set(value) {
+        this.$emit('update:mask', value)
+      }
+    },
+    proxy_crop: {
+      get() {
+        return this.crop
+      },
+      set(value) {
+        this.$emit('update:crop', value)
+      }
+    }
+  },
+  methods: {
+    onSelectFile() {
+      this.proxy_image = null
+      this.proxy_mask = null
+      this.proxy_crop = null
+      this.$refs.file.click()
+    },
+    onReRun() {
+      this.$emit('rerun')
+    },
+    async loadFile(e) {
+      try {
+        const file = get(e.target, 'files[0]', null)
+        if (!file) return
+
+        const image = new Image()
+        const reader = new FileReader()
+        reader.onload = (e) => (image.src = e.target.result)
+        reader.readAsDataURL(file)
+
+        image.onload = () => this.doCrop(image)
+      } catch (e) {
+        console.log(e)
+      }
+    },
+    doCrop(image) {
+      const canvas = document.createElement('canvas')
+      const context = canvas.getContext('2d')
+
+      // Calculate the dimensions and starting point for cropping
+      const originalWidth = image.width
+      const originalHeight = image.height
+      let startX, startY, width, height
+
+      if (originalWidth > originalHeight) {
+        width = originalHeight
+        height = originalHeight
+        startX = (originalWidth - originalHeight) / 2
+        startY = 0
+      } else {
+        width = originalWidth
+        height = originalWidth
+        startX = 0
+        startY = (originalHeight - originalWidth) / 2
+      }
+
+      // Calculate the starting point for center crop
+      const offsetX = (width - IMG_DIMENSIONS) / 2
+      const offsetY = (height - IMG_DIMENSIONS) / 2
+
+      // Set the canvas size to 1024x1024 pixels
+      canvas.width = 2 * IMG_PADDING + IMG_DIMENSIONS
+      canvas.height = 2 * IMG_PADDING + IMG_DIMENSIONS
+
+      // Fill the canvas with white color
+      context.fillStyle = '#FFFFFF'
+      context.fillRect(0, 0, canvas.width, canvas.height)
+
+      // Draw the cropped image onto the canvas
+      context.drawImage(
+        image,
+        startX + offsetX,
+        startY + offsetY,
+        width - 2 * offsetX,
+        height - 2 * offsetY,
+        IMG_PADDING,
+        IMG_PADDING,
+        IMG_DIMENSIONS,
+        IMG_DIMENSIONS
+      )
+
+      // Get the data URI of the cropped image
+      const imageDataURI = canvas.toDataURL()
+      this.proxy_image = imageDataURI
+
+      // Create the mask
+      const canvas_mask = document.createElement('canvas')
+      const context_mask = canvas_mask.getContext('2d')
+      canvas_mask.width = 2 * IMG_PADDING + IMG_DIMENSIONS
+      canvas_mask.height = 2 * IMG_PADDING + IMG_DIMENSIONS
+      context_mask.fillStyle = '#FFFFFF'
+      context_mask.fillRect(0, 0, canvas_mask.width, canvas_mask.height)
+      context_mask.fillStyle = '#000000'
+      context_mask.fillRect(
+        IMG_PADDING,
+        IMG_PADDING,
+        IMG_DIMENSIONS,
+        IMG_DIMENSIONS
+      )
+
+      // Get the data URI of the mask
+      const maskDataURI = canvas_mask.toDataURL()
+      this.proxy_mask = maskDataURI
+
+      // Create the crop (without padding)
+      const canvas_crop = document.createElement('canvas')
+      const context_crop = canvas_crop.getContext('2d')
+      canvas_crop.width = IMG_DIMENSIONS
+      canvas_crop.height = IMG_DIMENSIONS
+      context_crop.drawImage(
+        image,
+        startX + offsetX,
+        startY + offsetY,
+        width - 2 * offsetX,
+        height - 2 * offsetY,
+        0,
+        0,
+        IMG_DIMENSIONS,
+        IMG_DIMENSIONS
+      )
+
+      // Get the data URI of the crop
+      const cropDataURI = canvas_crop.toDataURL()
+      this.proxy_crop = cropDataURI
+
+      this.$refs.file.value = null
+    }
+  },
+  mounted() {
+    try {
+      const image = new Image()
+      image.src = '/fox.png'
+      image.onload = () => this.doCrop(image)
+    } catch (e) {
+      console.log(e)
+    }
+  }
+}
+</script>
+
+<style lang="stylus" scoped>
+.select-file
+  input[type="file"]
+    display none
+</style>
