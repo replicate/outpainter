@@ -1,5 +1,6 @@
 {
-  "name": "nuxt-app",
+  "name": "outpainter",
+  "description": "Expand the contents of an image using generative fill.",
   "private": true,
   "scripts": {
     "build": "nuxt build",
@@ -27,6 +28,7 @@
     "replicate": "^0.12.2",
     "replicate-webhook-proxy": "^0.0.2",
     "tiny-emitter": "^2.1.0",
-    "uuid": "^9.0.0"
+    "uuid": "^9.0.0",
+    "vue3-popper": "^1.5.0"
   }
 }

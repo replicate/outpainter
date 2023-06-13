@@ -17,5 +17,39 @@ export default defineNuxtConfig({
       tailwindcss: {},
       autoprefixer: {}
     }
+  },
+  app: {
+    head: {
+      title: 'Outpainter',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        {
+          name: 'description',
+          content: 'Expand the contents of an image using generative fill.'
+        },
+        {
+          name: 'og:title',
+          content: 'Outpainter'
+        },
+        {
+          name: 'og:description',
+          content: 'Expand the contents of an image using generative fill.'
+        }
+      ],
+      link: [
+        {
+          rel: 'icon',
+          type: 'image/x-icon',
+          href: '/favicon.ico',
+          sizes: 'any'
+        },
+        {
+          rel: 'icon',
+          type: 'image/svg+xml',
+          href: '/favicon.svg'
+        }
+      ]
+    }
   }
 })

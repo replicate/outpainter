@@ -1,4 +1,6 @@
-# Stable Diffusion Outpainter
+# Outpainter
+
+Expand the contents of an image using generative fill.
 
 ## How it works
 
