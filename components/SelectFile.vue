@@ -12,7 +12,7 @@
     type="submit"
   ) Select Image
   button.ml-4.text-white.bg-blue-700.font-medium.rounded-lg.text-sm.w-full.px-5.py-2.text-center(
-    @click="onReRun"
+    @click="$emit('submit')"
     class="hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
     type="submit"
   ) Submit
@@ -58,15 +58,13 @@ export default {
   },
   methods: {
     onSelectFile() {
+      this.$refs.file.click()
+    },
+    async loadFile(e) {
       this.proxy_image = null
       this.proxy_mask = null
       this.proxy_crop = null
-      this.$refs.file.click()
-    },
-    onReRun() {
-      this.$emit('rerun')
-    },
-    async loadFile(e) {
+
       try {
         const file = get(e.target, 'files[0]', null)
         if (!file) return

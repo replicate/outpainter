@@ -1,17 +1,13 @@
 <template lang="pug">
 .flex.flex-col.justify-center.items-center
-  .outpainter-outpaint.flex.justify-center.items-center.expand(
-    v-if="loading"
-    :style="`background-image: url(${cropDataURL});`"
+  .outpainter-outpaint.flex.justify-center.items-center(
+    :style="`background-image: url(${output || cropDataURL});`"
+    :class="{ expand: state == 'loading', expanded: state === 'output' }"
   )
-    .blur
+    .blur(v-if="state === 'loading'")
     .outpainter-input(
       :style="`background-image: url(${cropDataURL})`"
     )
-  .outpainter-outpaint.flex.justify-center.items-center.expanded(
-    v-else
-    :style="`background-image: url(${output})`"
-  )
   input.block.w-full.flex-grow.rounded-l-md.p-2.my-4(
     v-model="prompt"
     class="max-w-[512px]"
@@ -19,7 +15,7 @@
     type="text"
   )
   SelectFile(
-    @rerun="doCreatePrediction"
+    @submit="doCreatePrediction"
     v-model:image="imageDataURL"
     v-model:mask="maskDataURL"
     v-model:crop="cropDataURL"
@@ -35,7 +31,7 @@ import { EventBus } from '@/services'
 export default {
   name: 'Outpainter',
   data: () => ({
-    loading: false,
+    state: null,
     output: null,
 
     imageDataURL: null,
@@ -45,7 +41,10 @@ export default {
   }),
   watch: {
     cropDataURL(value) {
-      if (value) this.doCreatePrediction()
+      if (value) {
+        this.state = null
+        this.output = null
+      }
     }
   },
   methods: {
@@ -54,12 +53,12 @@ export default {
       const image = new Image()
       image.src = payload
       image.onload = () => {
-        this.loading = false
+        this.state = 'output'
         this.output = payload
       }
     },
     async doCreatePrediction() {
-      this.loading = true
+      this.state = 'loading'
       this.output = null
       try {
         await this.createPrediction({
@@ -97,7 +96,7 @@ export default {
 .flex
   .outpainter-outpaint
     width 100%
-    max-width 512px
+    max-width 256px
     aspect-ratio 1
     background-position center
     background-repeat no-repeat
@@ -107,7 +106,7 @@ export default {
     overflow hidden
 
     &.expand
-      animation expand 3s ease-in-out
+      animation expand 3s ease-in-out forwards
 
     &.expanded
       max-width 512px
