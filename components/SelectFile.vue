@@ -85,26 +85,21 @@ export default {
       const canvas = document.createElement('canvas')
       const context = canvas.getContext('2d')
 
-      // Calculate the dimensions and starting point for cropping
-      const originalWidth = image.width
-      const originalHeight = image.height
-      let startX, startY, width, height
+      // Calculate the aspect ratio of the original image
+      const aspectRatio = image.width / image.height
+      let cropWidth, cropHeight, offsetX, offsetY
 
-      if (originalWidth > originalHeight) {
-        width = originalHeight
-        height = originalHeight
-        startX = (originalWidth - originalHeight) / 2
-        startY = 0
+      if (aspectRatio >= 1) {
+        cropWidth = image.height
+        cropHeight = image.height
+        offsetX = (image.width - cropWidth) / 2
+        offsetY = 0
       } else {
-        width = originalWidth
-        height = originalWidth
-        startX = 0
-        startY = (originalHeight - originalWidth) / 2
+        cropWidth = image.width
+        cropHeight = image.width
+        offsetX = 0
+        offsetY = (image.height - cropHeight) / 2
       }
-
-      // Calculate the starting point for center crop
-      const offsetX = (width - IMG_DIMENSIONS) / 2
-      const offsetY = (height - IMG_DIMENSIONS) / 2
 
       // Set the canvas size to 1024x1024 pixels
       canvas.width = 2 * IMG_PADDING + IMG_DIMENSIONS
@@ -117,10 +112,10 @@ export default {
       // Draw the cropped image onto the canvas
       context.drawImage(
         image,
-        startX + offsetX,
-        startY + offsetY,
-        width - 2 * offsetX,
-        height - 2 * offsetY,
+        offsetX,
+        offsetY,
+        cropWidth,
+        cropHeight,
         IMG_PADDING,
         IMG_PADDING,
         IMG_DIMENSIONS,
@@ -157,10 +152,10 @@ export default {
       canvas_crop.height = IMG_DIMENSIONS
       context_crop.drawImage(
         image,
-        startX + offsetX,
-        startY + offsetY,
-        width - 2 * offsetX,
-        height - 2 * offsetY,
+        offsetX,
+        offsetY,
+        cropWidth,
+        cropHeight,
         0,
         0,
         IMG_DIMENSIONS,
