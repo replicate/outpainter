@@ -29,11 +29,35 @@ export default defineNuxtConfig({
           content: 'Expand the contents of an image using generative fill.'
         },
         {
-          name: 'og:title',
+          property: 'og:title',
           content: 'Outpainter'
         },
         {
-          name: 'og:description',
+          property: 'og:description',
+          content: 'Expand the contents of an image using generative fill.'
+        },
+        {
+          property: 'og:url',
+          content: 'https://outpainter.app/'
+        },
+        {
+          property: 'og:image',
+          content: 'https://outpainter.app/cover.jpeg'
+        },
+        {
+          property: 'twitter:image',
+          content: 'https://outpainter.app/cover.jpeg'
+        },
+        {
+          property: 'twitter:card',
+          content: 'summary_large_image'
+        },
+        {
+          property: 'twitter:title',
+          content: 'Outpainter'
+        },
+        {
+          property: 'twitter:description',
           content: 'Expand the contents of an image using generative fill.'
         }
       ],
