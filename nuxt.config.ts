@@ -5,7 +5,7 @@ export default defineNuxtConfig({
     enabled: false
   },
   runtimeConfig: {
-    replicateApiToken: process.env.NUXT_REPLICATE_API_TOKEN || ''
+    replicateApiToken: process.env.REPLICATE_API_TOKEN || ''
   },
   nitro: {
     preset: 'vercel-edge'
