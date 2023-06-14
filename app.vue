@@ -1,10 +1,9 @@
 <template lang="pug">
-main.container.mx-auto.p-8(
-  class="lg:p-10"
-)
-  Header
-  Outpainter
-  Footer
+body.bg-gray-50
+  main.container.mx-auto
+    Header
+    Outpainter
+    Footer
 </template>
 
 <script>
