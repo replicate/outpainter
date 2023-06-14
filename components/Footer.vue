@@ -1,5 +1,5 @@
 <template lang="pug">
-footer.mt-20
+footer.mt-40
   .text-center
     | Outpainter is an open-source project from 
     a.underline(
@@ -7,7 +7,7 @@ footer.mt-20
       target="_blank"
     ) Replicate
     | .
-  nav.text-center.mt-16
+  nav.text-center.mt-4
     Popper(
       content="Built by Replicate"
       placement="top"
@@ -61,7 +61,7 @@ export default {
   },
   data: () => ({
     linkStyle:
-      'inline-block relative w-12 h-12 mx-2 opacity-40 transition-all duration-200 hover:opacity-100',
+      'inline-block relative w-12 h-12 mx-2 opacity-100 transition-all duration-200 hover:opacity-100',
     imageStyle: 'p-3 transition-all duration-200 hover:p-1 hover:saturate-100'
   })
 }
