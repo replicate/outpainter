@@ -17,11 +17,14 @@
   )
     input.block.w-full.flex-grow.rounded-l-md.p-3.border.border-gray-300.text-center(
       v-model="prompt"
+      @keydown.enter="doCreatePrediction"
+      :disabled="state === 'loading'"
       placeholder="Enter a text prompt"
       type="text"
     )
     button.text-white.bg-gray-900.font-medium.rounded-r-md.text-sm.w-full.px-5.py-3.text-center(
       @click="doCreatePrediction"
+      :disabled="state === 'loading'"
       class="sm:w-auto"
       type="submit"
     ) Paint
