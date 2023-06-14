@@ -6,23 +6,23 @@
     ref="file"
     accept="image/*"
   )
-  button.text-white.bg-blue-700.font-medium.rounded-lg.text-sm.w-full.px-5.py-2.text-center(
+  button.text-white.bg-gray-400.font-medium.rounded-md.text-sm.w-full.px-5.py-2.text-center(
     @click="onSelectFile"
-    class="hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    class="sm:w-auto"
     type="submit"
-  ) Select Image
-  button.ml-4.text-white.bg-blue-700.font-medium.rounded-lg.text-sm.w-full.px-5.py-2.text-center(
+  ) Upload an image
+  button.ml-4.text-white.bg-gray-900.font-medium.rounded-md.text-sm.w-full.px-5.py-2.text-center(
     @click="$emit('submit')"
-    class="hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 sm:w-auto dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+    class="sm:w-auto "
     type="submit"
-  ) Submit
+  ) Paint
 </template>
 
 <script>
 import { get } from 'lodash'
 
-const IMG_DIMENSIONS = 256
-const IMG_PADDING = 128
+const IMG_DIMENSIONS = 512
+const IMG_PADDING = 256
 
 export default {
   name: 'Outpainter',
@@ -99,7 +99,7 @@ export default {
         offsetY = (image.height - cropHeight) / 2
       }
 
-      // Set the canvas size to 1024x1024 pixels
+      // Set the canvas size
       canvas.width = 2 * IMG_PADDING + IMG_DIMENSIONS
       canvas.height = 2 * IMG_PADDING + IMG_DIMENSIONS
 
@@ -142,6 +142,8 @@ export default {
       // Get the data URI of the mask
       const maskDataURI = canvas_mask.toDataURL()
       this.proxy_mask = maskDataURI
+
+      console.log({IMG_DIMENSIONS})
 
       // Create the crop (without padding)
       const canvas_crop = document.createElement('canvas')
