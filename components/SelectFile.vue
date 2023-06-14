@@ -6,16 +6,11 @@
     ref="file"
     accept="image/*"
   )
-  button.text-white.bg-gray-400.font-medium.rounded-md.text-sm.w-full.px-5.py-2.text-center(
+  button.mb-4.text-white.bg-gray-400.font-medium.rounded-md.text-sm.w-full.px-5.py-3.text-center(
     @click="onSelectFile"
     class="sm:w-auto"
     type="submit"
   ) Upload an image
-  button.ml-4.text-white.bg-gray-900.font-medium.rounded-md.text-sm.w-full.px-5.py-2.text-center(
-    @click="$emit('submit')"
-    class="sm:w-auto "
-    type="submit"
-  ) Paint
 </template>
 
 <script>
@@ -143,7 +138,7 @@ export default {
       const maskDataURI = canvas_mask.toDataURL()
       this.proxy_mask = maskDataURI
 
-      console.log({IMG_DIMENSIONS})
+      console.log({ IMG_DIMENSIONS })
 
       // Create the crop (without padding)
       const canvas_crop = document.createElement('canvas')

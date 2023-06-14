@@ -1,25 +1,35 @@
 <template lang="pug">
 .flex.flex-col.justify-center.items-center
-    .outpainter-outpaint.flex.justify-center.items-center(
-      :style="`background-image: url(${output || '/checkerboard.png'});`",
-      :class="{ loading: state === 'loading', loaded: state === 'output' }"
+  .outpainter.flex.justify-center.items-center(
+    :class="{ loading: state === 'loading' }"
+  )
+    Image.outpainter-output(
+      v-if="state === 'output'"
+      :src="output"
     )
-      .outpainter-input(
-        :style="`background-image: url(${cropDataURL})`"
-      )
-      
-    input.block.w-full.flex-grow.rounded-l.rounded-l-md.p-3.my-4.border.border-gray-300.text-center(
+    .outpainter-input(
+      :class="{ fade: state === 'output' }"
+      :style="`background-image: url(${cropDataURL})`"
+    )
+    
+  .prompt-input.my-5(
+    class="max-w-[512px]"
+  )
+    input.block.w-full.flex-grow.rounded-l-md.p-3.border.border-gray-300.text-center(
       v-model="prompt"
-      class="max-w-[512px]"
       placeholder="Enter a text prompt"
       type="text"
     )
-    SelectFile(
-      @submit="doCreatePrediction"
-      v-model:image="imageDataURL"
-      v-model:mask="maskDataURL"
-      v-model:crop="cropDataURL"
-    )
+    button.text-white.bg-gray-900.font-medium.rounded-r-md.text-sm.w-full.px-5.py-3.text-center(
+      @click="doCreatePrediction"
+      class="sm:w-auto"
+      type="submit"
+    ) Paint
+  SelectFile(
+    v-model:image="imageDataURL"
+    v-model:mask="maskDataURL"
+    v-model:crop="cropDataURL"
+  )
 </template>
 
 <script>
@@ -88,28 +98,45 @@ export default {
 @keyframes toggleBlur
   0%
     filter blur(0)
-  50% 
+  50%
     filter blur(10px)
   100%
-    filter: blur(0)
+    filter blur(0)
+
+@keyframes fadeOut
+  0%
+    opacity 1
+  100%
+    opacity 0
 
 .flex
-  .outpainter-outpaint
+  .outpainter
     width 100%
     aspect-ratio 1
+    background-image url('/checkerboard.png')
     position relative
     overflow hidden
-    
-    &.loading
-      animation: toggleBlur 2s infinite;
 
-    &.loaded
-      background-position center
-      background-repeat no-repeat
-      background-size cover
+    &.loading
+      animation toggleBlur 2s infinite
+
+  .outpainter-output
+    width 100%
+    aspect-ratio 1
+    position absolute
 
   .outpainter-input
     width 50%
     aspect-ratio 1
+    background-position center
+    background-repeat no-repeat
+    background-size cover
     z-index 10
+    position absolute
+
+    &.fade
+      animation fadeOut 2s forwards
+
+  .prompt-input
+    display flex
 </style>
