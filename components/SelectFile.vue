@@ -18,6 +18,7 @@ import { get } from 'lodash'
 
 const IMG_DIMENSIONS = 512
 const IMG_PADDING = 256
+const MASK_OVERLAP = 25
 
 export default {
   name: 'Outpainter',
@@ -128,10 +129,10 @@ export default {
       context_mask.fillRect(0, 0, canvas_mask.width, canvas_mask.height)
       context_mask.fillStyle = '#000000'
       context_mask.fillRect(
-        IMG_PADDING,
-        IMG_PADDING,
-        IMG_DIMENSIONS,
-        IMG_DIMENSIONS
+        IMG_PADDING + MASK_OVERLAP,
+        IMG_PADDING + MASK_OVERLAP,
+        IMG_DIMENSIONS - 2 * MASK_OVERLAP,
+        IMG_DIMENSIONS - 2 * MASK_OVERLAP
       )
 
       // Get the data URI of the mask
