@@ -2,7 +2,6 @@
 .flex.flex-col.justify-center.items-center
   .outpainter.flex.justify-center.items-center(
     :class="{ loading: state === 'loading' }"
-    ref="outpainter"
   )
     Image.outpainter-output(
       v-if="state === 'output'"
