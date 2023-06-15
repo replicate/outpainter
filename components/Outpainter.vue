@@ -2,6 +2,7 @@
 .flex.flex-col.justify-center.items-center
   .outpainter.flex.justify-center.items-center(
     :class="{ loading: state === 'loading' }"
+    ref="outpainter"
   )
     Image.outpainter-output(
       v-if="state === 'output'"
@@ -9,7 +10,7 @@
     )
     .outpainter-input(
       :class="{ fade: state === 'output' }"
-      :style="`background-image: url(${cropDataURL})`"
+      :style="`background-image: url(${cropDataURL});width: ${relativeCropWidth * 100}%`"
     )
     
   .prompt-input.my-5(
@@ -37,8 +38,10 @@
 
 <script>
 import { mapActions } from 'pinia'
+
 import useAppStore from '@/stores/app'
 import { EventBus } from '@/services'
+import { IMG_DIMENSIONS, IMG_PADDING } from '@/config'
 
 export default {
   name: 'Outpainter',
@@ -51,6 +54,11 @@ export default {
     cropDataURL: null,
     prompt: 'a painting of a fox'
   }),
+  computed: {
+    relativeCropWidth() {
+      return IMG_DIMENSIONS / (2 * IMG_PADDING + IMG_DIMENSIONS)
+    }
+  },
   watch: {
     cropDataURL(value) {
       if (value) {
@@ -63,10 +71,45 @@ export default {
     ...mapActions(useAppStore, ['createPrediction']),
     async predictionOutput(payload) {
       const image = new Image()
+      image.crossOrigin = 'Anonymous'
       image.src = payload
       image.onload = () => {
-        this.state = 'output'
-        this.output = payload
+        const canvas = document.createElement('canvas')
+        const context = canvas.getContext('2d')
+
+        // Set the canvas dimensions to match the loaded image
+        canvas.width = image.width
+        canvas.height = image.height
+
+        // Draw the loaded image onto the canvas
+        context.drawImage(image, 0, 0)
+
+        // Load the initial image
+        const initialImage = new Image()
+        initialImage.src = this.cropDataURL
+
+        initialImage.onload = () => {
+          // Calculate the position to center the initial image on the merged canvas
+          const relativeImageWidth = this.relativeCropWidth * canvas.width
+          const relativeImageHeight = this.relativeCropWidth * canvas.height
+          const x = (canvas.width - relativeImageWidth) / 2
+          const y = (canvas.height - relativeImageHeight) / 2
+
+          // Draw the intial image onto the merged canvas at the center position
+          context.drawImage(
+            initialImage,
+            x,
+            y,
+            relativeImageWidth,
+            relativeImageHeight
+          )
+
+          // Convert the merged canvas to a data URL
+          const mergedDataURL = canvas.toDataURL()
+
+          this.state = 'output'
+          this.output = mergedDataURL
+        }
       }
     },
     async doCreatePrediction() {
@@ -129,7 +172,6 @@ export default {
     position absolute
 
   .outpainter-input
-    width 50%
     aspect-ratio 1
     background-position center
     background-repeat no-repeat

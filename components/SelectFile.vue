@@ -16,9 +16,7 @@
 <script>
 import { get } from 'lodash'
 
-const IMG_DIMENSIONS = 512
-const IMG_PADDING = 256
-const MASK_OVERLAP = 25
+import { IMG_DIMENSIONS, IMG_PADDING, MASK_OVERLAP } from '@/config'
 
 export default {
   name: 'Outpainter',
@@ -138,8 +136,6 @@ export default {
       // Get the data URI of the mask
       const maskDataURI = canvas_mask.toDataURL()
       this.proxy_mask = maskDataURI
-
-      console.log({ IMG_DIMENSIONS })
 
       // Create the crop (without padding)
       const canvas_crop = document.createElement('canvas')
