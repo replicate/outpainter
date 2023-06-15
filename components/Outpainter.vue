@@ -40,7 +40,7 @@ import { mapActions } from 'pinia'
 
 import useAppStore from '@/stores/app'
 import { EventBus } from '@/services'
-import { IMG_DIMENSIONS, IMG_PADDING } from '@/config'
+import { IMG_DIMENSIONS, IMG_PADDING, MASK_OVERLAP } from '@/config'
 
 export default {
   name: 'Outpainter',
@@ -91,16 +91,45 @@ export default {
           // Calculate the position to center the initial image on the merged canvas
           const relativeImageWidth = this.relativeCropWidth * canvas.width
           const relativeImageHeight = this.relativeCropWidth * canvas.height
+          const relativeMaskOverlap =
+            (MASK_OVERLAP / IMG_DIMENSIONS) * relativeImageWidth
+
           const x = (canvas.width - relativeImageWidth) / 2
           const y = (canvas.height - relativeImageHeight) / 2
 
           // Draw the intial image onto the merged canvas at the center position
+          /*
           context.drawImage(
             initialImage,
-            x,
-            y,
-            relativeImageWidth,
-            relativeImageHeight
+            x + MASK_OVERLAP + 200,
+            y + MASK_OVERLAP,
+            relativeImageWidth - 2 * MASK_OVERLAP,
+            relativeImageHeight - 2 * MASK_OVERLAP
+          )
+          */
+          /*
+          context.drawImage(
+            initialImage,
+            MASK_OVERLAP,
+            MASK_OVERLAP,
+            initialImage.width - 2 * MASK_OVERLAP,
+            initialImage.height - 2 * MASK_OVERLAP,
+            x + MASK_OVERLAP,
+            y + MASK_OVERLAP,
+            relativeImageWidth - 2 * MASK_OVERLAP,
+            relativeImageHeight - 2 * MASK_OVERLAP
+          )
+          */
+          context.drawImage(
+            initialImage,
+            MASK_OVERLAP,
+            MASK_OVERLAP,
+            initialImage.width - 2 * MASK_OVERLAP,
+            initialImage.height - 2 * MASK_OVERLAP,
+            x + relativeMaskOverlap,
+            y + relativeMaskOverlap,
+            relativeImageWidth - 2 * relativeMaskOverlap,
+            relativeImageHeight - 2 * relativeMaskOverlap
           )
 
           // Convert the merged canvas to a data URL
