@@ -8,6 +8,7 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event)
   const { ws_key, input } = body
 
+  // https://replicate.com/stability-ai/stable-diffusion-inpainting
   const prediction = await replicate.predictions.create({
     version: 'c28b92a7ecd66eee4aefcd8a94eb9e7f6c3805d5f06038165407fb5cb355ba67',
     input,
