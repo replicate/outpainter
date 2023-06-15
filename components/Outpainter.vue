@@ -98,28 +98,6 @@ export default {
           const y = (canvas.height - relativeImageHeight) / 2
 
           // Draw the intial image onto the merged canvas at the center position
-          /*
-          context.drawImage(
-            initialImage,
-            x + MASK_OVERLAP + 200,
-            y + MASK_OVERLAP,
-            relativeImageWidth - 2 * MASK_OVERLAP,
-            relativeImageHeight - 2 * MASK_OVERLAP
-          )
-          */
-          /*
-          context.drawImage(
-            initialImage,
-            MASK_OVERLAP,
-            MASK_OVERLAP,
-            initialImage.width - 2 * MASK_OVERLAP,
-            initialImage.height - 2 * MASK_OVERLAP,
-            x + MASK_OVERLAP,
-            y + MASK_OVERLAP,
-            relativeImageWidth - 2 * MASK_OVERLAP,
-            relativeImageHeight - 2 * MASK_OVERLAP
-          )
-          */
           context.drawImage(
             initialImage,
             MASK_OVERLAP,
