@@ -6,11 +6,11 @@
     ref="file"
     accept="image/*"
   )
-  button.mb-4.text-white.bg-gray-400.font-medium.rounded-md.text-sm.w-full.px-5.py-3.text-center(
+  button.mb-4.text-gray-400.border.border-gray-400.font-medium.rounded.text-sm.w-full.px-3.py-2.text-center(
     @click="onSelectFile"
     class="sm:w-auto"
     type="submit"
-  ) Upload an image
+  ) Upload a new starting image
 </template>
 
 <script>
